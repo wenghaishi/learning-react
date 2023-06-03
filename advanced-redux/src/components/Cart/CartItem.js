@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../../store/cart";
 
 const CartItem = (props) => {
-  const { title, quantity, total, price } = props.item;
+  const { title, quantity, total, price } = props;
   const productNumber = useSelector((state) => state.cart.products);
   const dispatch = useDispatch();
   const addProductHandler = () => {
