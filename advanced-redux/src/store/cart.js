@@ -11,6 +11,9 @@ const cartSlice = createSlice({
     addProduct(state) {
       state.products++;
     },
+    minusProduct(state) {
+      state.products--;
+    },
   },
 });
 
