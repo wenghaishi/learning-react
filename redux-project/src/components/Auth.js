@@ -1,4 +1,4 @@
-import { authActions } from "../store/index";
+import { authActions } from "../store/auth-slice";
 import classes from "./Auth.module.css";
 import { useSelector, useDispatch } from "react-redux";
 
