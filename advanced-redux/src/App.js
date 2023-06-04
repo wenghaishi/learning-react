@@ -5,11 +5,15 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { cartActions } from "./store/cart";
 import { useDispatch } from "react-redux";
+import { Fragment } from "react";
+import Notification from "./components/UI/Notification";
 
 function App() {
   const showCart = useSelector((state) => state.cart.showCart);
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart.products);
   const dispatch = useDispatch();
+  const notification = useSelector((state) => state.cart.notification);
+  const [isInitial, setIsInitial] = useState(true);
 
   useEffect(() => {
     const sendCartData = async () => {
@@ -38,6 +42,11 @@ function App() {
       );
     };
 
+    if (isInitial) {
+      setIsInitial(false);
+      return;
+    }
+
     sendCartData().catch((error) => {
       dispatch(
         cartActions.showNotification({
@@ -47,13 +56,22 @@ function App() {
         })
       );
     });
-  }, [cart, dispatch]);
+  }, [cart]);
 
   return (
-    <Layout>
-      {showCart && <Cart />}
-      <Products />
-    </Layout>
+    <Fragment>
+      {notification && (
+        <Notification
+          status={notification.status}
+          title={notification.title}
+          message={notification.message}
+        />
+      )}
+      <Layout>
+        {showCart && <Cart />}
+        <Products />
+      </Layout>
+    </Fragment>
   );
 }
 
