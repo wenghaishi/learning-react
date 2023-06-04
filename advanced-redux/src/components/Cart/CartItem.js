@@ -3,17 +3,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../../store/cart";
 
 const CartItem = (props) => {
-  const { title, quantity, total, price } = props;
+  const { title, quantity, total, price, id } = props.item;
   const productNumber = useSelector((state) => state.cart.products);
   const dispatch = useDispatch();
   const addProductHandler = () => {
-    dispatch(cartActions.addProduct());
+    dispatch(
+      cartActions.addProduct({
+        id,
+        title,
+        price,
+      })
+    );
   };
 
   const minusProductHandler = () => {
-    if (productNumber > 0) {
-      dispatch(cartActions.minusProduct());
-    }
+    dispatch(cartActions.minusProduct(id));
   };
 
   return (
