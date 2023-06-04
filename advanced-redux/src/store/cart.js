@@ -14,6 +14,10 @@ const cartSlice = createSlice({
       state.showCart = !state.showCart;
     },
 
+    replaceCart(state, action) {
+      state.items = action.payload;
+    },
+
     showNotification(state, action) {
       state.notification = {
         status: action.payload.status,
@@ -85,6 +89,36 @@ export const sendCartData = (cart) => {
           message: "send cart data success",
         })
       );
+    } catch (error) {
+      dispatch(
+        cartActions.showNotification({
+          status: "error",
+          title: "error",
+          message: "send cart data failed",
+        })
+      );
+    }
+  };
+};
+
+export const fetchCartData = () => {
+  return async (dispatch) => {
+    const fetchData = async () => {
+      const response = await fetch(
+        "https://advanced-re-f6537-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json"
+      );
+
+      if (!response.ok) {
+        throw new Error("could not fetch cart items");
+      }
+      const data = await response.json();
+      return data;
+    };
+
+    try {
+      const cartData = await fetchData();
+      console.log(cartData);
+      dispatch(cartSlice.actions.replaceCart({ items: cartData.items || [] }));
     } catch (error) {
       dispatch(
         cartActions.showNotification({
