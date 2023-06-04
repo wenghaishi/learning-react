@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialCartState = { showCart: false, products: 0, items: [] };
+const initialCartState = { showCart: false, notification: null, products: 0, items: [] };
 
 const cartSlice = createSlice({
   name: "cart",
@@ -8,6 +8,11 @@ const cartSlice = createSlice({
     toggleCart(state) {
       state.showCart = !state.showCart;
     },
+
+    showNotification(state, action) {
+      state.notification = { status: action.payload.status, title: action.payload.title, message: action.payload.message }
+    },
+
     addProduct(state, action) {
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
@@ -25,6 +30,7 @@ const cartSlice = createSlice({
         existingItem.totalPrice = existingItem.totalPrice + newItem.price;
       }
     },
+
     minusProduct(state, action) {
       const id = action.payload;
       const existingItem = state.items.find((item) => item.id === id);
