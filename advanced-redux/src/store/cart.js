@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialCartState = { showCart: false, notification: null, products: 0, items: [] };
+const initialCartState = {
+  showCart: false,
+  notification: null,
+  products: 0,
+  items: [],
+};
 
 const cartSlice = createSlice({
   name: "cart",
@@ -10,7 +15,11 @@ const cartSlice = createSlice({
     },
 
     showNotification(state, action) {
-      state.notification = { status: action.payload.status, title: action.payload.title, message: action.payload.message }
+      state.notification = {
+        status: action.payload.status,
+        title: action.payload.title,
+        message: action.payload.message,
+      };
     },
 
     addProduct(state, action) {
@@ -44,6 +53,49 @@ const cartSlice = createSlice({
     },
   },
 });
+
+export const sendCartData = (cart) => {
+  return async (dispatch) => {
+    dispatch(
+      cartActions.showNotification({
+        status: "pending",
+        title: "sending",
+        message: "sending cart data",
+      })
+    );
+
+    const sendRequest = async () => {
+      const response = await fetch(
+        "https://advanced-re-f6537-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json",
+        { method: "PUT", body: JSON.stringify(cart) }
+      );
+
+      if (!response.ok) {
+        throw new Error("sending cart data failed");
+      }
+    };
+
+    try {
+      await sendRequest();
+
+      dispatch(
+        cartActions.showNotification({
+          status: "success",
+          title: "success",
+          message: "send cart data success",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        cartActions.showNotification({
+          status: "error",
+          title: "error",
+          message: "send cart data failed",
+        })
+      );
+    }
+  };
+};
 
 export const cartActions = cartSlice.actions;
 export default cartSlice.reducer;
